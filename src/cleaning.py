@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-_CURRENCY_RE = re.compile(r"[^0-9\-\.]")
+_CURRENCY_RE = re.compile(r"[^0-9\-.]")
 
 
 def strip_strings(df: pd.DataFrame, columns: Optional[Iterable[str]] = None) -> pd.DataFrame:
@@ -100,3 +100,32 @@ def assert_no_duplicate_keys(df: pd.DataFrame, keys: list[str]) -> None:
     if bool(dup.any()):
         examples = df.loc[dup, keys].head(10)
         raise ValueError(f"Duplicate keys detected for {keys}. Examples:\n{examples}")
+
+# --- Demonstration of Data Cleaning Utilities --- 
+print("\n--- Demonstration of Data Cleaning Utilities ---")
+
+# Create a sample DataFrame
+sample_data = pd.DataFrame({
+    'Name': ['  Alice ', 'Bob   ', 'Charlie'],
+    'Value': [' $1,000.00 ', '€500', '250.50'],
+    'Status': ['active', 'PENDING ', 'inactive']
+})
+print("Original Sample DataFrame:")
+display(sample_data)
+
+# Demonstrate strip_strings
+df_stripped = strip_strings(sample_data, columns=['Name', 'Status'])
+print("\nAfter strip_strings:")
+display(df_stripped)
+
+# Demonstrate currency_to_number
+df_currency_cleaned = currency_to_number(sample_data, column='Value')
+print("\nAfter currency_to_number:")
+display(df_currency_cleaned)
+
+# Demonstrate normalize_case
+df_normalized = normalize_case(sample_data, columns=['Status'], mode='upper')
+print("\nAfter normalize_case (upper) on 'Status':")
+display(df_normalized)
+
+print("\nUtility functions defined and demonstrated successfully.")
